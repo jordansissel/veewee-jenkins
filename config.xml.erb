@@ -66,7 +66,12 @@ if [ ! -f &quot;$box&quot; -o &quot;templates/$template&quot; -nt &quot;$box&quo
   mkdir -p tmp
   export TMP=$PWD/tmp
   bundle install
-  bundle exec veewee vbox define &quot;$name&quot; &quot;$template&quot;
+
+  # Make sure any old vm is dead and gone
+  VBoxManage controlvm "$name" poweroff || true
+  VBoxManage unregistervm "$name" --delete || true
+
+  bundle exec veewee vbox define --force &quot;$name&quot; &quot;$template&quot;
   bundle exec veewee vbox build &quot;$name&quot; --nogui --force --auto
   bundle exec veewee vbox export &quot;$name&quot;
 else
