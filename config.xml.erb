@@ -68,12 +68,28 @@ if [ ! -f &quot;$box&quot; -o &quot;templates/$template&quot; -nt &quot;$box&quo
   rm -f $TMP/open-uri* || true
   bundle install
 
+  # Try to prepare for Xvnc
+  which Xvnc &amp;&amp; XVNC=Xvnc
+  which Xvnc4 &amp;&amp; XVNC=Xvnc4
+  [ ! -f "ephemeral-x.sh" ] &amp;&amp; wget -O ephemeral-x.sh https://raw.github.com/jordansissel/xdotool/master/t/ephemeral-x.sh
+
   # Make sure any old vm is dead and gone
   VBoxManage controlvm "$name" poweroff || true
   VBoxManage unregistervm "$name" --delete || true
 
   bundle exec veewee vbox define --force &quot;$name&quot; &quot;$template&quot;
-  bundle exec veewee vbox build &quot;$name&quot; --nogui --force --auto
+
+  # Run inside Xvnc if possible. This lets us observe the installation process
+  # if it's broken.
+  if [ ! -z $XVNC ] ; then
+    yes &quot;hello world&quot; | vncpasswd notsosecret
+    XVNCFLAGS=&quot;-geometry 1024x768 -AcceptKeyEvents=off -AcceptPointerEvents=off -AcceptCutText=off -SendCutText=off -PasswordFile=notsosecret&quot;
+    sh ephemeral-x.sh -x &quot;$XVNC $XVNCFLAGS&quot; bundle exec veewee vbox build &quot;$name&quot; --force --auto
+  else
+    echo &quot;RUNNING WITHOUT A GUI. COULD NOT FIND XVNC. SORRY.&quot;
+    bundle exec veewee vbox build &quot;$name&quot; --force --auto --nogui
+  fi
+
   bundle exec veewee vbox export &quot;$name&quot;
 else
   echo &quot;$box is newer than templates/$template; nothing to do :)&quot;
