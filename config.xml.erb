@@ -49,14 +49,22 @@
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command>bundle install
+      <command>
 
 template=&quot;<%= template_name %>&quot;
-boxname=&quot;box-$(date +%Y-%m-%dT%H:%M:%S)&quot;
-bundle exec veewee vbox define &quot;$boxname&quot; &quot;$template&quot;
-bundle exec veewee vbox build &quot;$boxname&quot; --nogui --force --auto
-bundle exec veewee vbox export &quot;$boxname&quot;
-mv &quot;${boxname}.box&quot; &quot;${template}.box&quot;</command>
+#name=&quot;box-$(date +%Y-%m-%dT%H:%M:%S)&quot;
+name=$template
+box=&quot;${template}.box&quot;
+
+# Only build if we need to (no .box or the template is newer)
+if [ ! -f &quot;$box&quot; -o &quot;templates/$template&quot; -nt &quot;$box&quot; ] ; then
+  bundle install
+  bundle exec veewee vbox define &quot;$name&quot; &quot;$template&quot;
+  bundle exec veewee vbox build &quot;$name&quot; --nogui --force --auto
+  bundle exec veewee vbox export &quot;$name&quot;
+else
+  echo &quot;$box is newer than templates/$template; nothing to do :)&quot;
+fi
     </hudson.tasks.Shell>
   </builders>
   <publishers>
