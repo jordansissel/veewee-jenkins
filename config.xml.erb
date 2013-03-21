@@ -63,6 +63,8 @@ box=&quot;${template}.box&quot;
 
 # Only build if we need to (no .box or the template is newer)
 if [ ! -f &quot;$box&quot; -o &quot;templates/$template&quot; -nt &quot;$box&quot; ] ; then
+  mkdir -p tmp
+  export TMP=$PWD/tmp
   bundle install
   bundle exec veewee vbox define &quot;$name&quot; &quot;$template&quot;
   bundle exec veewee vbox build &quot;$name&quot; --nogui --force --auto
