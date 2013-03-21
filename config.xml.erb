@@ -51,7 +51,7 @@
     <hudson.tasks.Shell>
       <command>bundle install
 
-template=&quot;<%= template_name %>l&quot;
+template=&quot;<%= template_name %>&quot;
 boxname=&quot;box-$(date +%Y-%m-%dT%H:%M:%S)&quot;
 bundle exec veewee vbox define &quot;$boxname&quot; templates/&quot;$template&quot;
 bundle exec veewee vbox build &quot;$boxname&quot; --nogui --force --auto
