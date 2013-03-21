@@ -21,5 +21,5 @@ templates.each do |path|
   jobdir = File.join(ENV["JENKINS_HOME"], "jobs", job)
   puts "Writing #{jobdir}/config.xml"
   Dir.mkdir(jobdir) if !Dir.exists?(jobdir)
-  File.write(File.join(jobdir, "config.xml"), template.result(binding))
+  File.write(File.join(jobdir, "config.xml"), config_template.result(binding))
 end
