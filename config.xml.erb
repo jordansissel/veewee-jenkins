@@ -53,7 +53,7 @@
 
 template=&quot;<%= template_name %>&quot;
 boxname=&quot;box-$(date +%Y-%m-%dT%H:%M:%S)&quot;
-bundle exec veewee vbox define &quot;$boxname&quot; templates/&quot;$template&quot;
+bundle exec veewee vbox define &quot;$boxname&quot; &quot;$template&quot;
 bundle exec veewee vbox build &quot;$boxname&quot; --nogui --force --auto
 bundle exec veewee vbox export &quot;$boxname&quot;
 mv &quot;${boxname}.box&quot; &quot;${template}.box&quot;</command>
