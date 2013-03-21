@@ -65,6 +65,7 @@ box=&quot;${template}.box&quot;
 if [ ! -f &quot;$box&quot; -o &quot;templates/$template&quot; -nt &quot;$box&quot; ] ; then
   mkdir -p tmp
   export TMP=$PWD/tmp
+  rm -f $TMP/open-uri* || true
   bundle install
 
   # Make sure any old vm is dead and gone
