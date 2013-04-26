@@ -47,7 +47,7 @@
   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
   <triggers class="vector">
     <hudson.triggers.SCMTrigger>
-      <spec>47 12 * * *</spec>
+      <spec>H H * * *</spec>
       <ignorePostCommitHooks>false</ignorePostCommitHooks>
     </hudson.triggers.SCMTrigger>
   </triggers>
@@ -100,10 +100,18 @@ fi
   <publishers>
     <hudson.tasks.ArtifactArchiver>
       <artifacts>*.box</artifacts>
-      <latestOnly>false</latestOnly>
+      <latestOnly>true</latestOnly>
     </hudson.tasks.ArtifactArchiver>
   </publishers>
   <buildWrappers>
+    <hudson.plugins.build__timeout.BuildTimeoutWrapper plugin="build-timeout@1.11">
+      <timeoutMinutes>60</timeoutMinutes>
+      <failBuild>true</failBuild>
+      <writingDescription>true</writingDescription>
+      <timeoutPercentage>0</timeoutPercentage>
+      <timeoutType>absolute</timeoutType>
+      <timeoutMinutesElasticDefault>3</timeoutMinutesElasticDefault>
+    </hudson.plugins.build__timeout.BuildTimeoutWrapper>
     <ruby-proxy-object>
       <ruby-object ruby-class="Jenkins::Plugin::Proxies::BuildWrapper" pluginid="rvm">
         <object ruby-class="RvmWrapper" pluginid="rvm">
